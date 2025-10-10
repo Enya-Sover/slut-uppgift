@@ -103,7 +103,7 @@ export async function updateUser(
     if (!data) {
       throw new HTTPException(404, { message: "User not found" });
     }
-    throw new HTTPException(500, { message: "Failed to update student" });
+    throw new HTTPException(500, { message: "Failed to update user" });
   }
   return data;
 }

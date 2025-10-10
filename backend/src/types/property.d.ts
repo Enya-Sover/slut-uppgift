@@ -8,3 +8,9 @@ interface Property {
     availability: boolean
 }
 
+type PropertyListQuery = {
+    limit?: number;
+    offset?: number;
+    q?: string;
+    sort_by?: "name"
+  };
