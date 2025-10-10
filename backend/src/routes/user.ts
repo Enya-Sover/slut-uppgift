@@ -40,7 +40,7 @@ userApp.get("/", userQueryValidator, async (c) => {
   
   })
   
-  userApp.put("/:id", requireAuth, adminAuth, userValidator, async (c) => {
+  userApp.put("/:id", requireAuth, adminAuth, newUserValidator, async (c) => {
     const id = c.req.param("id");
     const sb = c.get("supabase")
     const body = await c.req.json();

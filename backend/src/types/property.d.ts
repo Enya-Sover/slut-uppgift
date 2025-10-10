@@ -1,11 +1,16 @@
 
 
-interface Property {
-    id: string,
+
+interface NewProperty {
+    name: string,
     description: string,
     location: string,
-    pricePerNight: number,
+    price_per_night: number,
     availability: boolean
+}
+interface Property extends NewProperty {
+    id: string,
+    created_at: string
 }
 
 type PropertyListQuery = {

@@ -3,7 +3,7 @@ import { Hono } from "hono";
 import { HTTPException } from 'hono/http-exception'
 import { authApp } from "./routes/auth.js";
 import userApp from "./routes/user.js";
-
+import propertyApp from "./routes/property.js";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -11,6 +11,7 @@ dotenv.config();
 // import courseApp  from './routes/course.js'
 // import studentApp from "./routes/student.js";
 import { optionalAuth } from "./middleware/auth.js";
+import bookingApp from "./routes/booking.js";
 
 
 
@@ -26,6 +27,8 @@ app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
 app.route('/users', userApp)
+app.route('/property', propertyApp)
+app.route('/bookings', bookingApp)
 
 
 app.get("/health/", (c) => {

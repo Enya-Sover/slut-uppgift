@@ -1,14 +1,23 @@
 
 
 
-interface Booking {
-    id: string,
-    createdAt: string,
-    checkInDate: string,
-    checkOutDate: string,
-    totalPrice: number,
-    user_id: string,
-    property_id: string
-}
-
-//Fält: id, createdAt, checkInDate, checkOutDate, totalPrice
+interface NewBooking {
+    check_in_date: string;   
+    check_out_date: string;  
+    total_price: number;
+    user_id: string;
+    property_id: string;
+  }
+  
+  interface Booking extends NewBooking {
+    id: string;
+    created_at: string;
+  }
+  
+  type BookingListQuery = {
+    limit?: number;
+    offset?: number;
+    property_id?: string;
+    user_id?: string;
+  };
+  

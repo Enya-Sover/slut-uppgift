@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/property.js";
 import { HTTPException } from "hono/http-exception";
-import { propertyQueryValidator, propertyValidator } from "../validators/propertyValidator.js";
+import { newPropertyValidator, propertyQueryValidator, propertyValidator } from "../validators/propertyValidator.js";
 
 const propertyApp = new Hono();
 
@@ -18,7 +18,7 @@ propertyApp.get("/", propertyQueryValidator, async (c) => {
       limit: query.limit || 10,
     };
   
-    const response = await db.getProperty(sb, query);
+    const response = await db.getProperties(sb, query);
     return c.json({
       ...defaultResponse,
       ...response
@@ -27,7 +27,13 @@ propertyApp.get("/", propertyQueryValidator, async (c) => {
 
 
 propertyApp.post("/", async (c)=> {
-  //Logik är flyttad till auth.ts för att hantera både auth och usertabell creation samtidigt
+    const sb = c.get("supabase");
+    const body = await c.req.json();
+    const property = await db.createProperty(sb, body);
+    if(!property){
+        throw new HTTPException(400, {message: "Failed to create property"})
+        }
+    return c.json(property, 201);
 })
 
 propertyApp.get("/:id", async (c) => {
@@ -41,7 +47,7 @@ propertyApp.get("/:id", async (c) => {
 
 })
 
-propertyApp.put("/:id", propertyValidator, async (c) => {
+propertyApp.put("/:id", newPropertyValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase")
   const body = await c.req.json();
