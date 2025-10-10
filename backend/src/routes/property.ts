@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/property.js";
 import { HTTPException } from "hono/http-exception";
-import { newPropertyValidator, propertyQueryValidator, propertyValidator } from "../validators/propertyValidator.js";
+import { newPropertyValidator, propertyQueryValidator, propertyValidator, updatePropertyValidator } from "../validators/propertyValidator.js";
 
 const propertyApp = new Hono();
 
@@ -48,6 +48,19 @@ propertyApp.get("/:id", async (c) => {
 })
 
 propertyApp.put("/:id", newPropertyValidator, async (c) => {
+  const id = c.req.param("id");
+  const sb = c.get("supabase")
+  const body = await c.req.json();
+  const property = await db.updateProperty(sb, id, body);
+
+  if (!property) {
+    throw new HTTPException(404, { message: "Property not found" });
+  }
+
+  return c.json(property, 200);
+});
+
+propertyApp.patch("/:id", updatePropertyValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase")
   const body = await c.req.json();

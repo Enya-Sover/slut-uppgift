@@ -47,3 +47,14 @@ const querySchema: z.ZodType<UserListQuery> = z.object({
 });
 
 export const userQueryValidator = zValidator("query", querySchema);
+
+
+export const updateUserValidator = zValidator(
+  "json",
+  z.object({
+    name: z.string().optional(),
+    email: z.string().optional(),
+    password: z.string().min(6).max(50).optional(),
+    is_admin: z.boolean().optional(),
+  })
+);

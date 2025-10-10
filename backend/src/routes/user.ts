@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { userQueryValidator, newUserValidator, userValidator } from "../validators/userValidator.js";
+import { userQueryValidator, newUserValidator, userValidator, updateUserValidator } from "../validators/userValidator.js";
 import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/user.js";
 import { HTTPException } from "hono/http-exception";
@@ -52,6 +52,23 @@ userApp.get("/", userQueryValidator, async (c) => {
   
     return c.json(user, 200);
   });
+
+  userApp.patch("/:id", requireAuth, updateUserValidator, async (c) => {
+    const id = c.req.param("id");
+    const sb = c.get("supabase");
+    const body = await c.req.json();
+  
+    const { is_admin, ...updateData }: User = body
+  
+    const user = await db.updateUser(sb, id, updateData);
+  
+    if (!user) {
+      throw new HTTPException(404, { message: "User not found" });
+    }
+  
+    return c.json(user, 200);
+  });
+  
   
   userApp.delete("/:id", requireAuth, adminAuth, async (c) => {
     const id = c.req.param("id");

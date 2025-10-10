@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/booking.js";
 import { HTTPException } from "hono/http-exception";
-import { newBookingValidator, bookingQueryValidator } from "../validators/bookingValidator.js";
+import { newBookingValidator, bookingQueryValidator, updateBookingValidator } from "../validators/bookingValidator.js";
 
 const bookingApp = new Hono();
 
@@ -49,6 +49,19 @@ bookingApp.get("/:id", async (c) => {
 });
 
 bookingApp.put("/:id", newBookingValidator, async (c) => {
+  const id = c.req.param("id");
+  const sb = c.get("supabase");
+  const body = await c.req.json();
+  const booking = await db.updateBooking(sb, id, body);
+
+  if (!booking) {
+    throw new HTTPException(404, { message: "Booking not found" });
+  }
+
+  return c.json(booking, 200);
+});
+
+bookingApp.patch("/:id", updateBookingValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase");
   const body = await c.req.json();

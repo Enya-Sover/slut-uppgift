@@ -61,7 +61,7 @@ export async function createBooking(
 export async function updateBooking(
   sb: SupabaseClient,
   id: string,
-  booking: Partial<Booking>
+  booking: NewBooking
 ): Promise<Booking | null> {
   const { data, error } = await sb.from("bookings").update(booking).eq("id", id).select().single();
 

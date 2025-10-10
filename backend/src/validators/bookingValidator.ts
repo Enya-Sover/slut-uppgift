@@ -41,3 +41,14 @@ const querySchema: z.ZodType<BookingListQuery> = z.object({
   });
 
   export const bookingQueryValidator = zValidator("query", querySchema);
+
+  export const updateBookingValidator = zValidator(
+    "json",
+    z.object({
+      check_in_date: z.string().optional(),
+      check_out_date: z.string().optional(),
+      total_price: z.coerce.number().optional(),
+      user_id: z.string().optional(),
+      property_id: z.string().optional(),
+    })
+  );

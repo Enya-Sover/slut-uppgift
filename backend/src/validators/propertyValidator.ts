@@ -41,3 +41,14 @@ const querySchema: z.ZodType<PropertyListQuery> = z.object({
   });
 
   export const propertyQueryValidator = zValidator("query", querySchema);
+
+  export const updatePropertyValidator = zValidator(
+    "json",
+    z.object({
+      name: z.string().optional(),
+      description: z.string().optional(),
+      location: z.string().optional(),
+      price_per_night: z.coerce.number().optional(),
+      availability: z.coerce.boolean().optional(),
+    })
+    );
