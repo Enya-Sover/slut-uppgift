@@ -4,12 +4,11 @@ interface NewUser {
     name: string,
     email: string,
     password: string,
-    isAdmin?: boolean
 }
 
 interface User extends NewUser {
     id: string,
-    isAdmin: boolean,
+    is_admin: boolean,
     created_at: string
 }
 type UserListQuery = {

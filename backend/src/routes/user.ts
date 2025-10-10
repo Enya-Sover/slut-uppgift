@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { userQueryValidator, newUserValidator, userValidator } from "../validators/userValidator.js";
-import { requireAuth } from "../middleware/auth.js";
+import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/user.js";
 import { HTTPException } from "hono/http-exception";
 
@@ -31,7 +31,7 @@ userApp.post("/", async (c)=> {
   //Logik är flyttad till auth.ts för att hantera både auth och usertabell creation samtidigt
 })
 
-userApp.get("/:email", async (c) => {
+userApp.get("/:email", requireAuth, adminAuth, async (c) => {
   const { email } = c.req.param()
   const sb = c.get("supabase")
   const user = await db.getUser(sb, email)
@@ -42,7 +42,7 @@ userApp.get("/:email", async (c) => {
 
 })
 
-userApp.put("/:id", requireAuth, userValidator, async (c) => {
+userApp.put("/:id", requireAuth, adminAuth, userValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase")
   const body = await c.req.json();
@@ -55,7 +55,7 @@ userApp.put("/:id", requireAuth, userValidator, async (c) => {
   return c.json(student, 200);
 });
 
-userApp.delete("/:id", requireAuth, async (c) => {
+userApp.delete("/:id", requireAuth, adminAuth, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase")
   const deleted = await db.deleteUser(sb, id);

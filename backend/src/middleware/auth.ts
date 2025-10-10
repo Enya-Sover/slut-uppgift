@@ -62,4 +62,32 @@ function createSupabaseForRequest(c: Context) {
     }
     return next() 
   }
+
+
+  export async function adminAuth(c: Context, next: Next) {
+    const supabase = c.get("supabase")
+    const authUser = c.get("user")
+  
+    if (!authUser) {
+      throw new HTTPException(401, { message: "Unauthorized" })
+    }
+  
+    const { data: user, error } = await supabase
+      .from("users")
+      .select("is_admin")
+      .eq("email", authUser.email)
+      .single()
+  
+    if (error || !user) {
+      console.error(error)
+      throw new HTTPException(404, { message: "User not found in local table" })
+    }
+  
+    if (!user.is_admin) {
+      throw new HTTPException(403, { message: "Access denied: admin only" })
+    }
+  
+    return next()
+  }
+  
   

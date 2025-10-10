@@ -4,8 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 const schema: z.ZodType<NewUser> = z.object({
   name: z.string(),
   email: z.string(),
-  password: z.string().min(6).max(50),
-  isAdmin: z.boolean().optional(),
+  password: z.string().min(6).max(50)
 });
 
 const userSchema: z.ZodType<User> = z.object({
@@ -13,8 +12,8 @@ const userSchema: z.ZodType<User> = z.object({
   name: z.string(),
   email: z.string(),
   password: z.string().min(6).max(50),
-  isAdmin: z.boolean(),
-  created_at: z.coerce.string(),
+  is_admin: z.boolean(),
+  created_at: z.coerce.string()
 });
 
 export const newUserValidator = zValidator("json", schema, (result, c) => {
