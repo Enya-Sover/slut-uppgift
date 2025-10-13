@@ -74,10 +74,7 @@ userApp.get("/", userQueryValidator, async (c) => {
     const id = c.req.param("id");
     const sb = c.get("supabase");
     const body = await c.req.json();
-    const authUser = c.get("user");
-    if (!authUser || authUser.id !== id) {
-      throw new HTTPException(403, { message: "Cannot update another user's account" });
-    }
+  
     const { is_admin, created_at, ...updateData }: Partial<User> = body;
   
     if (body.email || body.password) {
