@@ -3,6 +3,7 @@ import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/booking.js";
 import { HTTPException } from "hono/http-exception";
 import { newBookingValidator, bookingQueryValidator, updateBookingValidator } from "../validators/bookingValidator.js";
+import * as property from "../database/property.js";
 
 const bookingApp = new Hono();
 
@@ -27,7 +28,19 @@ bookingApp.get("/", bookingQueryValidator, async (c) => {
 bookingApp.post("/", newBookingValidator, async (c) => {
   const sb = c.get("supabase");
   const body = await c.req.json();
-  const booking = await db.createBooking(sb, body);
+
+  const propertyData = await property.getProperty(sb, body.property_id);
+  if (!propertyData) {
+    throw new HTTPException(404, { message: "Property not found" });
+  }
+
+  const checkIn = new Date(body.check_in_date);
+  const checkOut = new Date(body.check_out_date);
+  const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+  const totalPrice = nights * propertyData.price_per_night;
+
+  const bookingData = { ...body, total_price: totalPrice };
+  const booking = await db.createBooking(sb, bookingData);
 
   if (!booking) {
     throw new HTTPException(400, { message: "Failed to create booking" });

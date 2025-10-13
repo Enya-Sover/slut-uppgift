@@ -36,7 +36,7 @@ propertyApp.post("/", async (c)=> {
     return c.json(property, 201);
 })
 
-propertyApp.get("/:id", async (c) => {
+propertyApp.get("/:id", requireAuth, async (c) => {
   const { id } = c.req.param()
   const sb = c.get("supabase")
   const property = await db.getProperty(sb, id)
@@ -47,7 +47,7 @@ propertyApp.get("/:id", async (c) => {
 
 })
 
-propertyApp.put("/:id", newPropertyValidator, async (c) => {
+propertyApp.put("/:id", requireAuth, newPropertyValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase")
   const body = await c.req.json();
@@ -60,7 +60,7 @@ propertyApp.put("/:id", newPropertyValidator, async (c) => {
   return c.json(property, 200);
 });
 
-propertyApp.patch("/:id", updatePropertyValidator, async (c) => {
+propertyApp.patch("/:id", requireAuth, updatePropertyValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase")
   const body = await c.req.json();
@@ -73,7 +73,7 @@ propertyApp.patch("/:id", updatePropertyValidator, async (c) => {
   return c.json(property, 200);
 });
 
-propertyApp.delete("/:id", async (c) => {
+propertyApp.delete("/:id", requireAuth, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase")
   const deleted = await db.deleteProperty(sb, id);

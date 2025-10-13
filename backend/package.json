@@ -14,10 +14,12 @@
     "axios": "^1.12.2",
     "dotenv": "^17.2.2",
     "hono": "^4.9.8",
+    "jsonwebtoken": "^9.0.2",
     "slugify": "^1.6.6",
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.11.17",
     "tsx": "^4.7.1",
     "typescript": "^5.8.3"
