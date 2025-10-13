@@ -42,23 +42,58 @@ userApp.get("/", userQueryValidator, async (c) => {
   
   userApp.put("/:id", requireAuth, adminAuth, newUserValidator, async (c) => {
     const id = c.req.param("id");
-    const sb = c.get("supabase")
+    const sb = c.get("supabase");
     const body = await c.req.json();
     const user = await db.updateUser(sb, id, body);
+    
+    const { data: authData, error: authError } = await sb.auth.admin.updateUserById(id, {
+      email: body.email,
+      password: body.password,
+    });
+  
+    if (authError) {
+      console.error("Auth update error:", authError);
+      throw new HTTPException(400, { message: "Failed to update user credentials" });
+    }
   
     if (!user) {
       throw new HTTPException(404, { message: "User not found" });
     }
   
-    return c.json(user, 200);
+    return c.json(
+      {
+        message: "User updated successfully",
+        user,
+        auth: authData,
+      },
+      200
+    );
   });
-
+  
   userApp.patch("/:id", requireAuth, updateUserValidator, async (c) => {
     const id = c.req.param("id");
     const sb = c.get("supabase");
     const body = await c.req.json();
+    const authUser = c.get("user");
+    if (!authUser || authUser.id !== id) {
+      throw new HTTPException(403, { message: "Cannot update another user's account" });
+    }
+    const { is_admin, created_at, ...updateData }: Partial<User> = body;
   
-    const { is_admin, ...updateData }: User = body
+    if (body.email || body.password) {
+      const { data, error } = await sb.auth.updateUser({
+        email: body.email,
+        password: body.password,
+      });
+  
+      if (error) {
+        console.error("Supabase Auth update error:", error);
+        throw new HTTPException(400, { message: "Failed to update authentication info" });
+      }
+      if(!data){
+        throw new HTTPException(404, { message: "Auth user not found" });
+      }
+    }
   
     const user = await db.updateUser(sb, id, updateData);
   
@@ -66,8 +101,9 @@ userApp.get("/", userQueryValidator, async (c) => {
       throw new HTTPException(404, { message: "User not found" });
     }
   
-    return c.json(user, 200);
+    return c.json({ message: "User updated successfully", user }, 200);
   });
+  
   
   
   userApp.delete("/:id", requireAuth, adminAuth, async (c) => {

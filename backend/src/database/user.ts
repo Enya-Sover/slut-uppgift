@@ -80,14 +80,14 @@ export async function getUser(
 
 export async function updateUser(
   sb: SupabaseClient,
-  _id: string,
+  id: string,
   user: Partial<User>
 ): Promise<User | null> {
-  const {id, ...updateBody}  = user;
+  const {...updateBody}  = user;
   const { data, error } = await sb
     .from("users")
     .update(updateBody)
-    .eq("id", _id)
+    .eq("id", id)
     .select()
     .single();
 

@@ -80,14 +80,14 @@ export async function getProperties(
   
   export async function updateProperty(
     sb: SupabaseClient,
-    _id: string,
-    property: Property
+    id: string,
+    property: NewProperty
   ): Promise<Property | null> {
-    const {id, ...updateBody}  = property;
+    const { ...updateBody}  = property;
     const { data, error } = await sb
       .from("properties")
       .update(updateBody)
-      .eq("id", _id)
+      .eq("id", id)
       .select()
       .single();
   

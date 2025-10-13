@@ -63,11 +63,25 @@ export async function updateBooking(
   id: string,
   booking: NewBooking
 ): Promise<Booking | null> {
-  const { data, error } = await sb.from("bookings").update(booking).eq("id", id).select().single();
+  const { data, error } = await sb
+  .from("bookings")
+  .update(booking)
+  .eq("id", id)
+  .select()
+  .single();
 
   if (error) {
-    console.error("Supabase update error (booking):", error);
-    if (!data) throw new HTTPException(404, { message: "Booking not found" });
+    console.error("Supabase update error:", error);
+    if (error.code === "23505") {
+      const match = error.details?.match(/\((.*?)\)=/);
+      const field = match ? match[1] : "field";
+      throw new HTTPException(409, {
+        message: `Booking with this ${field} already exists`,
+      });
+    }
+    if (!data) {
+      throw new HTTPException(404, { message: "Booking not found" });
+    }
     throw new HTTPException(500, { message: "Failed to update booking" });
   }
 

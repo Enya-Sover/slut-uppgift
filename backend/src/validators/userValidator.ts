@@ -55,6 +55,5 @@ export const updateUserValidator = zValidator(
     name: z.string().optional(),
     email: z.string().optional(),
     password: z.string().min(6).max(50).optional(),
-    is_admin: z.boolean().optional(),
   })
 );
