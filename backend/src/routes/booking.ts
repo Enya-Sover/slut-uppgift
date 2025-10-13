@@ -2,7 +2,11 @@ import { Hono } from "hono";
 import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/booking.js";
 import { HTTPException } from "hono/http-exception";
-import { newBookingValidator, bookingQueryValidator, updateBookingValidator } from "../validators/bookingValidator.js";
+import {
+  newBookingValidator,
+  bookingQueryValidator,
+  updateBookingValidator,
+} from "../validators/bookingValidator.js";
 import * as property from "../database/property.js";
 
 const bookingApp = new Hono();
@@ -36,7 +40,9 @@ bookingApp.post("/", newBookingValidator, async (c) => {
 
   const checkIn = new Date(body.check_in_date);
   const checkOut = new Date(body.check_out_date);
-  const nights = Math.ceil((checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24));
+  const nights = Math.ceil(
+    (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)
+  );
   const totalPrice = nights * propertyData.price_per_night;
 
   const bookingData = { ...body, total_price: totalPrice };
@@ -65,8 +71,20 @@ bookingApp.put("/:id", newBookingValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase");
   const body = await c.req.json();
-  const booking = await db.updateBooking(sb, id, body);
 
+  const propertyData = await property.getProperty(sb, body.property_id);
+  if (!propertyData) {
+    throw new HTTPException(404, { message: "Property not found" });
+  }
+  const checkIn = new Date(body.check_in_date);
+  const checkOut = new Date(body.check_out_date);
+  const nights = Math.ceil(
+    (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)
+  );
+  const totalPrice = nights * propertyData.price_per_night;
+
+  const bookingData = { ...body, total_price: totalPrice };
+  const booking = await db.updateBooking(sb, id, bookingData);
   if (!booking) {
     throw new HTTPException(404, { message: "Booking not found" });
   }
@@ -78,8 +96,34 @@ bookingApp.patch("/:id", updateBookingValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase");
   const body = await c.req.json();
-  const booking = await db.updateBooking(sb, id, body);
+  const existingBooking = await db.getBooking(sb, id);
+  if (!existingBooking) {
+    throw new HTTPException(404, { message: "Booking not found" });
+  }
 
+  const propertyData = await property.getProperty(sb, existingBooking.property_id);
+  if (!propertyData) {
+    throw new HTTPException(404, { message: "Property not found" });
+  }
+  const checkIn = body.check_in_date
+    ? new Date(body.check_in_date)
+    : new Date(existingBooking.check_in_date);
+  const checkOut = body.check_out_date
+    ? new Date(body.check_out_date)
+    : new Date(existingBooking.check_out_date);
+  const nights = Math.ceil(
+    (checkOut.getTime() - checkIn.getTime()) / (1000 * 60 * 60 * 24)
+  );
+  const totalPrice = nights * propertyData.price_per_night;
+
+  const bookingData = {
+    ...existingBooking,
+    ...body,
+    total_price: totalPrice,
+    check_in_date: checkIn.toISOString().split("T")[0],
+    check_out_date: checkOut.toISOString().split("T")[0],
+  };
+  const booking = await db.updateBooking(sb, id, bookingData);
   if (!booking) {
     throw new HTTPException(404, { message: "Booking not found" });
   }
