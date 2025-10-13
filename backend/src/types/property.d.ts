@@ -7,7 +7,7 @@ interface NewProperty {
     location: string;
     price_per_night: number;
     availability: boolean;
-    owner_id: string;
+    owner_id?: string;
 }
 interface Property extends NewProperty {
     id: string;

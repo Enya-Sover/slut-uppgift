@@ -8,7 +8,7 @@ const schema: z.ZodType<NewProperty> = z.object({
     location: z.string("Location is required"),
     price_per_night: z.coerce.number("Price per night must be a number").min(0, "Price per night cannot be negative"),
     availability: z.coerce.boolean("Availability must is required"),
-    owner_id: z.string("Owner ID is required")
+    owner_id: z.string("Owner ID is required").optional()
 })
 
 export const newPropertyValidator = zValidator("json", schema);

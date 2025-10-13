@@ -28,16 +28,38 @@ propertyApp.get("/", propertyQueryValidator, async (c) => {
     ...response,
   });
 });
-
 propertyApp.post("/", requireAuth, async (c) => {
   const sb = c.get("supabase");
+  const authUser = c.get("user");
   const body = await c.req.json();
-  const property = await db.createProperty(sb, body);
+  if (!authUser) {
+    throw new HTTPException(401, { message: "Unauthorized" });
+  }
+
+  const { data: localUser, error } = await sb
+    .from("users")
+    .select("id")
+    .eq("email", authUser.email)
+    .single();
+
+  if (error || !localUser) {
+    throw new HTTPException(404, { message: "User not found" });
+  }
+
+  const propertyData = {
+    ...body,
+    owner_id: localUser.id,
+  };
+
+  const property = await db.createProperty(sb, propertyData);
+
   if (!property) {
     throw new HTTPException(400, { message: "Failed to create property" });
   }
+
   return c.json(property, 201);
 });
+
 
 propertyApp.get("/:id", requireAuth, async (c) => {
   const { id } = c.req.param();
