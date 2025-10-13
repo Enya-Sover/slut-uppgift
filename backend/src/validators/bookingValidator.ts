@@ -8,6 +8,7 @@ check_out_date: z.string("Check-out date is required"),
 total_price: z.number().min(0, "Total price cannot be negative"),
 user_id: z.string("User ID is required"),
 property_id: z.string("Property ID is required"),
+owner_id: z.string("Owner ID is required").optional()
 }) 
 
 export const newBookingValidator = zValidator("json", schema);
@@ -20,6 +21,7 @@ const bookingSchema: z.ZodType<Booking> = z.object({
     total_price: z.number().min(0, "Total price cannot be negative"),
     user_id: z.string("User ID is required"),
     property_id: z.string("Property ID is required"),
+    owner_id: z.string("Owner ID is required").optional()
 })
 export const bookingValidator = zValidator("json", bookingSchema);
 

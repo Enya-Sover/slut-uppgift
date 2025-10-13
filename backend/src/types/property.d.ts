@@ -2,15 +2,16 @@
 
 
 interface NewProperty {
-    name: string,
-    description: string,
-    location: string,
-    price_per_night: number,
-    availability: boolean
+    name: string;
+    description: string;
+    location: string;
+    price_per_night: number;
+    availability: boolean;
+    owner_id: string;
 }
 interface Property extends NewProperty {
-    id: string,
-    created_at: string
+    id: string;
+    created_at: string;
 }
 
 type PropertyListQuery = {

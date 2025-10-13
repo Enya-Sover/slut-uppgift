@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/booking.js";
+import * as dbUser from "../database/user.js";
 import { HTTPException } from "hono/http-exception";
 import {
   newBookingValidator,
@@ -11,7 +12,7 @@ import * as property from "../database/property.js";
 
 const bookingApp = new Hono();
 
-bookingApp.get("/", bookingQueryValidator, async (c) => {
+bookingApp.get("/", requireAuth, adminAuth, bookingQueryValidator, async (c) => {
   const query = c.req.valid("query");
   const sb = c.get("supabase");
 
@@ -29,7 +30,7 @@ bookingApp.get("/", bookingQueryValidator, async (c) => {
   });
 });
 
-bookingApp.post("/", newBookingValidator, async (c) => {
+bookingApp.post("/", requireAuth, newBookingValidator, async (c) => {
   const sb = c.get("supabase");
   const body = await c.req.json();
 
@@ -55,7 +56,7 @@ bookingApp.post("/", newBookingValidator, async (c) => {
   return c.json(booking, 201);
 });
 
-bookingApp.get("/:id", async (c) => {
+bookingApp.get("/:id", requireAuth, async (c) => {
   const { id } = c.req.param();
   const sb = c.get("supabase");
   const booking = await db.getBooking(sb, id);
@@ -67,7 +68,7 @@ bookingApp.get("/:id", async (c) => {
   return c.json(booking);
 });
 
-bookingApp.put("/:id", newBookingValidator, async (c) => {
+bookingApp.put("/:id", requireAuth, newBookingValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase");
   const body = await c.req.json();
@@ -84,6 +85,7 @@ bookingApp.put("/:id", newBookingValidator, async (c) => {
   const totalPrice = nights * propertyData.price_per_night;
 
   const bookingData = { ...body, total_price: totalPrice };
+
   const booking = await db.updateBooking(sb, id, bookingData);
   if (!booking) {
     throw new HTTPException(404, { message: "Booking not found" });
@@ -92,7 +94,7 @@ bookingApp.put("/:id", newBookingValidator, async (c) => {
   return c.json(booking, 200);
 });
 
-bookingApp.patch("/:id", updateBookingValidator, async (c) => {
+bookingApp.patch("/:id",requireAuth, updateBookingValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase");
   const body = await c.req.json();
@@ -131,7 +133,7 @@ bookingApp.patch("/:id", updateBookingValidator, async (c) => {
   return c.json(booking, 200);
 });
 
-bookingApp.delete("/:id", async (c) => {
+bookingApp.delete("/:id", requireAuth, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase");
   const deleted = await db.deleteBooking(sb, id);

@@ -7,6 +7,7 @@ interface NewBooking {
     total_price: number;
     user_id: string;
     property_id: string;
+    owner_id?: string;
   }
   
   interface Booking extends NewBooking {
