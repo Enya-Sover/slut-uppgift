@@ -88,7 +88,6 @@ export async function updateBooking(
   return data;
 }
 
-// DELETE booking
 export async function deleteBooking(
   sb: SupabaseClient,
   id: string

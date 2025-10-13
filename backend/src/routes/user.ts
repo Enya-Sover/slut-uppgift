@@ -44,31 +44,16 @@ userApp.get("/", userQueryValidator, async (c) => {
     const id = c.req.param("id");
     const sb = c.get("supabase");
     const body = await c.req.json();
-    const user = await db.updateUser(sb, id, body);
-    
-    const { data: authData, error: authError } = await sb.auth.admin.updateUserById(id, {
-      email: body.email,
-      password: body.password,
-    });
   
-    if (authError) {
-      console.error("Auth update error:", authError);
-      throw new HTTPException(400, { message: "Failed to update user credentials" });
-    }
+    const user = await db.updateUser(sb, id, body);
   
     if (!user) {
       throw new HTTPException(404, { message: "User not found" });
     }
   
-    return c.json(
-      {
-        message: "User updated successfully",
-        user,
-        auth: authData,
-      },
-      200
-    );
+    return c.json({message: "User updated successfully", user}, 200);
   });
+  
   
   userApp.patch("/:id", requireAuth, updateUserValidator, async (c) => {
     const id = c.req.param("id");
