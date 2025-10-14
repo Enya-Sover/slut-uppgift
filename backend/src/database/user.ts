@@ -3,8 +3,6 @@ import type {
   SupabaseClient,
   User,
 } from "@supabase/supabase-js";
-
-import { supabase } from "../lib/supabase.js";
 import { HTTPException } from "hono/http-exception";
 
 export async function getUsers(

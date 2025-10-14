@@ -4,6 +4,7 @@ import { HTTPException } from 'hono/http-exception'
 import { authApp } from "./routes/auth.js";
 import userApp from "./routes/user.js";
 import propertyApp from "./routes/property.js";
+import { cors } from 'hono/cors'
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -18,7 +19,11 @@ import bookingApp from "./routes/booking.js";
 const app = new Hono({
   strict: false
 });
-
+app.use('*', cors({
+  origin: 'http://localhost:3001',
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowHeaders: ['Content-Type', 'Authorization'],
+}))
 const serverStartTime = Date.now()
 app.use("*", optionalAuth)
 app.route("/auth", authApp)
