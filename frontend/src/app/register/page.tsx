@@ -13,7 +13,6 @@ export default function RegisterPage() {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-console.log("name:", name, "email:", email, "password:", password);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>

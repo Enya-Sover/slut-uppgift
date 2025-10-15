@@ -21,9 +21,11 @@ const app = new Hono({
 });
 app.use('*', cors({
   origin: 'http://localhost:3001',
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH','OPTIONS'],
   allowHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
 }))
+ 
 const serverStartTime = Date.now()
 app.use("*", optionalAuth)
 app.route("/auth", authApp)
