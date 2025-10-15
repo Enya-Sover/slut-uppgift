@@ -4,6 +4,7 @@ import { zValidator } from "@hono/zod-validator";
 
 const schema: z.ZodType<NewProperty> = z.object({
     name: z.string("Name is required"),
+    image_url: z.string().optional(),
     description: z.string("Description is required"),
     location: z.string("Location is required"),
     price_per_night: z.coerce.number("Price per night must be a number").min(0, "Price per night cannot be negative"),
