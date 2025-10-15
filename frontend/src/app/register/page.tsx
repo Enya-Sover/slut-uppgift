@@ -1,6 +1,5 @@
 "use client";
 
-import { set } from "zod";
 import { registerUser } from "../../lib/api";
 import { useState } from "react";
 
@@ -15,11 +14,10 @@ export default function RegisterPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 console.log("name:", name, "email:", email, "password:", password);
-const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (
     e: React.FormEvent<HTMLFormElement>
-  ): Promise<RegisterFormData> => {
+  ) => {
     e.preventDefault();
     try {
       const data: RegisterFormData = await registerUser({
@@ -28,14 +26,15 @@ const [error, setError] = useState<string | null>(null);
         password,
       });
       console.log("Registred user:", data);
-      return data;
+        setName("");
+        setEmail("");
+        setPassword("");
     } catch (err) {
       setEmail("");
       setName("");
       setPassword("");
 
       console.error("Could not register user", err);
-      setError("Could not register user. Please try again.");
       throw new err();
     }
   };
@@ -77,7 +76,6 @@ const [error, setError] = useState<string | null>(null);
         Logga in
       </button>
     </form>
-      {error && <p className="text-red-500">{error}</p>}
     </section>
   );
 }
