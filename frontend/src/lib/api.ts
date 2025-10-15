@@ -91,3 +91,16 @@ export async function createProperty (propertyData: {
 
   return res.json();
 }
+
+export async function getMyProperties() {
+  const res = await fetch(`${baseUrl}/property/mine`, {
+    credentials: "include",
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new Error("Could not fetch properties");
+  }
+
+  return res.json();
+}

@@ -68,11 +68,11 @@ export default function CreatePropertyForm() {
       onSubmit={handleSubmit}
       className="flex flex-col gap-4 max-w-md mx-auto p-4"
     >
-      <h2 className="text-xl font-bold">Skapa ny Property</h2>
+      <h2 className="text-xl font-bold">Create new property</h2>
 
       <input
         type="text"
-        placeholder="Namn"
+        placeholder="Name of your property"
         name="name"
         value={formData.name}
         onChange={handleChange}
@@ -83,14 +83,14 @@ export default function CreatePropertyForm() {
       <input
         type="text"
         name="image_url"
-        placeholder="Bild-URL (valfritt)"
+        placeholder="Picture-URL (optional)"
         value={formData.image_url}
         onChange={handleChange}
         className="border p-2 rounded"
       />
 
       <textarea
-        placeholder="Beskrivning"
+        placeholder="Description of your property"
         name= "description"
         value={formData.description}
         onChange={handleChange}
@@ -100,7 +100,7 @@ export default function CreatePropertyForm() {
 
       <input
         type="text"
-        placeholder="Plats"
+        placeholder="Address"
         name= "location"
         value={formData.location}
         onChange={handleChange}

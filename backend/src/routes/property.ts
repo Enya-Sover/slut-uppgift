@@ -28,6 +28,39 @@ propertyApp.get("/", propertyQueryValidator, async (c) => {
     ...response,
   });
 });
+propertyApp.get("/mine", requireAuth, async (c) => {
+  const sb = c.get("supabase");
+  const authUser = c.get("user");
+
+  if (!authUser) {
+    throw new HTTPException(401, { message: "Unauthorized" });
+  }
+
+  const { data: localUser, error: userError } = await sb
+    .from("users")
+    .select("id")
+    .eq("email", authUser.email)
+    .single();
+
+  if (userError) {
+    throw new HTTPException(500, { message: "Failed to fetch user" });
+  }
+  if (!localUser) {
+    throw new HTTPException(404, { message: "Local user not found" });
+  }
+
+  const { data: properties, error: propertyError } = await sb
+    .from("properties")
+    .select("*")
+    .eq("owner_id", localUser.id);
+
+  if (propertyError) {
+    throw new HTTPException(500, { message: "Failed to fetch properties" });
+  }
+
+  return c.json(properties, 200);
+});
+
 propertyApp.post("/", requireAuth, async (c) => {
   const sb = c.get("supabase");
   const authUser = c.get("user");

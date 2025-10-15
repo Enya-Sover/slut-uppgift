@@ -2,6 +2,7 @@
 
 import { registerUser } from "../../lib/api";
 import { useState } from "react";
+import { mainTitle } from "../../ui/ui";
 
 type RegisterFormData = {
   name: string;
@@ -40,7 +41,7 @@ export default function RegisterPage() {
 
   return (
     <section className="flex flex-col">
-      <h1>Register page </h1>
+      <h1 className={mainTitle}>Register page </h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-sm mx-auto p-4">
       <input
         type="text"

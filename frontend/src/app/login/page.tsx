@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { handleLogin } from "../../lib/api";
-import { set } from "zod";
+import { mainContainer, mainTitle } from "../../ui/ui";
 
 type FormData = {
   email: string;
@@ -38,7 +38,7 @@ export default function LoginPage() {
   };
   return (
     <section>
-      <h1>Logga in</h1>
+      <h1 className={mainTitle}>Login page</h1>
       <form
         onSubmit={loginFunction}
         className="flex flex-col gap-4 max-w-sm mx-auto p-4"
