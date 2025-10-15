@@ -32,6 +32,9 @@ propertyApp.post("/", requireAuth, async (c) => {
   const sb = c.get("supabase");
   const authUser = c.get("user");
   const body = await c.req.json();
+  if(body.image_url === "" || !body.image_url) {
+    body.image_url = "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/29/3200x1600/landscape-1500478111-bed-and-breakfast-lead-index.jpg?resize=1800:*"
+  }
   if (!authUser) {
     throw new HTTPException(401, { message: "Unauthorized" });
   }

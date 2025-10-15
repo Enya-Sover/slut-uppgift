@@ -10,16 +10,26 @@ type FormData = {
 };
 
 export default function LoginPage() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState<FormData>({
+    email: "",
+    password: "",
+  });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement >
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const loginFunction = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const data: FormData = await handleLogin({ email, password });
-      setEmail("");
-      setPassword("");
+      await handleLogin(formData);
+     setFormData({ email: "", password: "" });
       setError(null);
     } catch (error) {
       console.error("Could not login user", error);
@@ -35,20 +45,22 @@ export default function LoginPage() {
       >
         <input
           type="email"
+          name="email"
           placeholder="Email"
           required
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={formData.email}
+          onChange={handleChange}
           className="border p-2 rounded"
         />
 
         <input
           type="password"
+          name="password"
           placeholder="Password"
           required
           minLength={6}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={handleChange}
           className="border p-2 rounded"
         />
 

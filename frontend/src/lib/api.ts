@@ -56,3 +56,38 @@ export async function handleLogin(userdata: {
 
   return res.json();
 }
+
+export async function createProperty (propertyData: {
+  name: string;
+  image_url?: string;
+  description: string;
+  location: string;
+  price_per_night: number;
+  availability: boolean;
+}) {
+  const cleanData = { ...propertyData };
+
+  if (cleanData.image_url === "") {
+    delete cleanData.image_url;
+  }
+  const res = await fetch(`${baseUrl}/property`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(propertyData),
+    credentials: "include"
+  });
+
+  if (!res.ok) {
+    let message = "Could not create property";
+    try {
+      const errorData = await res.json();
+      message = errorData.message || message;
+    } catch (e) {
+    }
+    throw new Error(message);
+  }
+
+  return res.json();
+}
