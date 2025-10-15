@@ -26,11 +26,11 @@ export default function HomePage() {
     <section>
       <h1 className={`${mainTitle}`}>Welcome to Davids bed and breakfast</h1>
       <p className={`${standardDescription}`}>Popular stays in sweden {`>`}</p>
-      <div className="flex flex-row">
+      <div className="flex flex-row gap-4">
         {properties && properties.length > 0 ? (
           properties.map((property: Property) => (
-            <div key={property.id} className="">
-              {/* <Link to={`/booking/${property.id}`}> */}
+            <div key={property.id} className="flex flex-col">
+              {/* <Link to={`/booking/${property.id}`}> implementeras senare*/}
                 <Image
                   src={`${property.image_url}`}
                   alt={property.name || "Fastighetsbild"}
@@ -40,7 +40,6 @@ export default function HomePage() {
                 />{" "}
               {/* </Link> */}
               <span>{property.name}</span>
-              <span>{property.description}</span>
               <span>{property.location}</span>
               <span> Price: {property.price_per_night} SEK</span>
             </div>
