@@ -12,7 +12,8 @@ type Property = {
     location: string
     price_per_night: number
     availability: boolean
-}
+} //! Att göra: Edit och delete funktionalitet
+
 export default function OwnerPage() {
     const [properties, setProperties] = useState<Property[]>([])
 
@@ -41,3 +42,4 @@ export default function OwnerPage() {
         </section>
     )
 }
+
