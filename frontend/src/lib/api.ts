@@ -1,3 +1,4 @@
+
 const baseUrl = "http://localhost:3000";
 export async function getProperties() {
   const res = await fetch(`${baseUrl}/property`, {
@@ -100,6 +101,48 @@ export async function getMyProperties() {
 
   if (!res.ok) {
     throw new Error("Could not fetch properties");
+  }
+
+  return res.json();
+}
+
+export async function deleteProperty (id: string) {
+  const res = await fetch(`${baseUrl}/property/${id}`, {
+    method: "DELETE",
+    credentials: "include"
+  });
+
+  if (!res.ok) {
+    let message = "Could not delete property";
+    try {
+      const errorData = await res.json();
+      message = errorData.message || message;
+    } catch (e) {
+    }
+    throw new Error(message);
+  }
+
+  return res.json();
+}
+
+export async function editProperty(id: string, updatedData: Partial<Property>) {
+  const res = await fetch(`${baseUrl}/property/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify(updatedData)
+  });
+  console.log(res)
+
+  if (!res.ok) {
+    let message = "Could not edit property";
+    try {
+      const errorData = await res.json();
+      message = errorData.message || message;
+    } catch (e) {}
+    throw new Error(message);
   }
 
   return res.json();

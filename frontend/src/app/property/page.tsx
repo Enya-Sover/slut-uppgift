@@ -47,9 +47,8 @@ export default function CreatePropertyForm() {
 
     try {
       await createProperty(formData);
-      setSuccess("Property skapad ✅");
+      setSuccess("Property skapad!");
 
-      // Töm formuläret efter lyckad skapning
       setFormData({
         name: "",
         image_url: "",

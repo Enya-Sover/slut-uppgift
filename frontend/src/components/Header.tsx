@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header>
+    <header className="sticky top-0 z-50 bg-white shadow">
       <nav className="flex flex-row gap-10">
           <span><Link href="/">Home</Link></span>
           <span><Link href="/login">Log in</Link></span>

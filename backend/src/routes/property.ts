@@ -10,8 +10,6 @@ import {
 } from "../validators/propertyValidator.js";
 import { getLocalUser } from "../utils/getLocalUser.js";
 import { verifyOwnershipOrAdmin } from "../middleware/verifyOwnershipOrAdmin.js";
-import { verify } from "crypto";
-
 const propertyApp = new Hono();
 
 propertyApp.get("/", propertyQueryValidator, async (c) => {
