@@ -147,3 +147,14 @@ export async function editProperty(id: string, updatedData: Partial<Property>) {
 
   return res.json();
 }
+
+export async function getCurrentUser() {
+  const res = await fetch(`${baseUrl}/auth/me`, {
+    credentials: "include",
+  });
+
+  if (res.status === 401) return null; 
+  if (!res.ok) throw new Error("Failed to fetch user");
+
+  return res.json(); 
+}

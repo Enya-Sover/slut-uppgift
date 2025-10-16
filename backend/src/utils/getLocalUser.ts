@@ -11,7 +11,7 @@ export async function getLocalUser(c: any, sb: any): Promise<LocalUser> {
 
   const { data: localUser, error } = await sb
     .from("users")
-    .select("id, email, is_admin")
+    .select("id, name, email, is_admin")
     .eq("email", authUser.email)
     .single();
 

@@ -31,9 +31,11 @@ export default function LoginPage() {
       await handleLogin(formData);
      setFormData({ email: "", password: "" });
       setError(null);
+      window.location.href = "/";
     } catch (error) {
       console.error("Could not login user", error);
       setError("Wrong email or password");
+      
     }
   };
   return (

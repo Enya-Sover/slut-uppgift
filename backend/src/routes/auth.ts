@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { newUserValidator } from "../validators/userValidator.js";
 import * as db from "../database/user.js";
+import { getLocalUser } from "../utils/getLocalUser.js";
 
 export const authApp = new Hono();
 
@@ -55,4 +56,10 @@ authApp.post("/logout", async (c) => {
   
 
   return c.json({ message: "Logout successfully" }, 200);
+});
+
+authApp.get("/me", async (c) => {
+  const sb = c.get("supabase");
+  const localUser = await getLocalUser(c, sb);
+  return c.json(localUser, 200);
 });
