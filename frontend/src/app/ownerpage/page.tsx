@@ -1,36 +1,47 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getMyProperties, deleteProperty } from "../../lib/api";
+import { getMyProperties, deleteProperty, editProperty } from "../../lib/api";
 import Image from "next/image";
 import { Edit, Trash2 } from "lucide-react";
 import { deleteButton, editButton, saveButton } from "../../ui/ui";
 
 type Property = {
-  id: number;
+  id: string;
   name: string;
   image_url?: string;
   description: string;
   location: string;
   price_per_night: number;
   availability: boolean;
-}; //! Att göra: Edit och delete funktionalitet
+};
 
 export default function OwnerPage() {
   const [properties, setProperties] = useState<Property[]>([]);
-  const [loadingId, setLoadingId] = useState<number | null>(null);
-  const [editMode, setEditMode] = useState<boolean>(false);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     getMyProperties()
-      .then((data) => {
-        setProperties(data);
-        console.log(data);
-      })
+      .then(setProperties)
       .catch((err) => console.error(err));
   }, []);
+  const [formData, setFormData] = useState<Property>({
+    id: "",
+    name: "",
+    image_url: "",
+    description: "",
+    location: "",
+    price_per_night: 0,
+    availability: true,
+  });
 
-  const handleDelete = async (id: number) => {
+  const handleEdit = (property: Property) => {
+    setFormData(property);
+    setEditingId(property.id);
+  };
+
+  const handleDelete = async (id: string) => {
     setLoadingId(id);
     try {
       await deleteProperty(id);
@@ -40,119 +51,147 @@ export default function OwnerPage() {
     }
   };
 
-  const handleEdit = (id: number) => {
-    setEditMode(!editMode);
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const target = e.target;
+  
+    setFormData((prev) => ({
+      ...prev,
+      [target.name]:
+        target instanceof HTMLInputElement && target.type === "checkbox"
+          ? target.checked
+          : target.value,
+    }));
   };
-  const handleSave = () => {};
+  
+
+  const handleSave = async (id: string) => {
+    const updated = await editProperty(id, formData);
+    setProperties((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, ...updated } : p))
+    );
+    setEditingId(null);
+  };
+
   return (
-    <section>
-      {properties && properties.length > 0 ? (
-        properties.map((property) => {
-          return (
-            <div
-              key={property.id}
-              style={{
-                border: "1px solid black",
-                margin: "10px",
-                padding: "10px",
-              }}
-            >
-              {property.image_url && (
-                <Image
-                  src={property.image_url}
-                  alt={property.name}
-                  width={200}
-                  height={200}
+    <section className="max-w-3xl mx-auto p-4">
+      {properties.length > 0 ? (
+        properties.map((property) => (
+          <div
+            key={property.id}
+            className="border rounded-lg p-4 mb-4 shadow-sm bg-white"
+          >
+            {property.image_url && (
+              <Image
+                src={property.image_url}
+                alt={property.name}
+                width={400}
+                height={250}
+                className="rounded mb-3 object-cover"
+              />
+            )}
+
+            {editingId === property.id ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSave(property.id);
+                }}
+                className="flex flex-col gap-2"
+              >
+                <input
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="border p-2 rounded"
+                  required
                 />
-              )}
-              {editMode ? (
-                <form className="flex flex-col gap-2 mt-2">
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  className="border p-2 rounded"
+                  required
+                />
+                <input
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="border p-2 rounded"
+                  required
+                />
+                <input
+                  name="price_per_night"
+                  type="number"
+                  value={formData.price_per_night}
+                  onChange={handleChange}
+                  className="border p-2 rounded"
+                  required
+                />
+                <label className="flex items-center gap-2">
                   <input
-                    type="text"
-                    required
-                    defaultValue={property.name}
-                    className="border p-2 rounded"
+                    name="availability"
+                    type="checkbox"
+                    checked={formData.availability}
+                    onChange={handleChange}
                   />
-                  <textarea
-                    required
-                    defaultValue={property.description}
-                    className="border p-2 rounded"
-                  />
-                  <input
-                    type="text"
-                    required
-                    defaultValue={property.location}
-                    className="border p-2 rounded"
-                  />
-                  <input
-                    type="number"
-                    required
-                    defaultValue={property.price_per_night}
-                    className="border p-2 rounded"
-                  />
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      defaultChecked={property.availability}
-                    />
-                    Available
-                  </label>
+                  Available
+                </label>
 
-                  <div className="flex gap-2 mt-2">
-                    <button
-                      type="button"
-                      onClick={handleSave}
-                      className={sa}
-                    >
-                      Save
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setEditMode(false)}
-                      className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500 transition"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <>
-                  <h2 className="text-lg font-bold">{property.name}</h2>
-                  <p>{property.description}</p>
-                  <p>Location: {property.location}</p>
-                  <p>Price per night: ${property.price_per_night}</p>
-                  <p>Available: {property.availability ? "Yes" : "No"}</p>
-                </>
-              )}
+                <div className="flex gap-3 mt-2">
+                  <button type="submit" className={saveButton}>
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEditingId(null)}
+                    className="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500 transition"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <>
+                <h2 className="text-xl font-bold">{property.name}</h2>
+                <p className="text-gray-700">{property.description}</p>
+                <p className="text-gray-600">📍 {property.location}</p>
+                <p className="text-gray-600">
+                  💰 ${property.price_per_night} / night
+                </p>
+                <p className="text-gray-600">
+                  🏡 {property.availability ? "Available" : "Unavailable"}
+                </p>
+              </>
+            )}
 
-              <div className="mt-4 flex gap-3">
-                <button
-                  onClick={() => handleEdit(property.id)}
-                  className={editButton}
-                >
-                  <Edit size={18} />
-                  Edit
-                </button>
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => handleEdit(property)}
+                className={editButton}
+              >
+                <Edit size={18} />
+                Edit
+              </button>
 
-                <button
-                  onClick={() => handleDelete(property.id)}
-                  disabled={loadingId === property.id}
-                  className={`${deleteButton}
-                    ${
-                      loadingId === property.id
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-red-500 hover:bg-red-600"
-                    }`}
-                >
-                  <Trash2 size={18} />
-                  {loadingId === property.id ? "Deleting..." : "Delete"}
-                </button>
-              </div>
+              <button
+                onClick={() => handleDelete(property.id)}
+                disabled={loadingId === property.id}
+                className={`${deleteButton} ${
+                  loadingId === property.id
+                    ? "bg-gray-400 cursor-not-allowed"
+                    : "bg-red-500 hover:bg-red-600"
+                }`}
+              >
+                <Trash2 size={18} />
+                {loadingId === property.id ? "Deleting..." : "Delete"}
+              </button>
             </div>
-          );
-        })
+          </div>
+        ))
       ) : (
-        <p>No properties found</p>
+        <p className="text-center text-gray-600">No properties found</p>
       )}
     </section>
   );
