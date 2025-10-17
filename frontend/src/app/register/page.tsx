@@ -1,6 +1,6 @@
 "use client";
 
-import { registerUser } from "../../lib/api";
+import { registerUser, handleLogin } from "../../lib/api";
 import { useState } from "react";
 import { mainTitle } from "../../ui/ui";
 
@@ -15,29 +15,22 @@ export default function RegisterPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const data: RegisterFormData = await registerUser({
-        name,
-        email,
-        password,
-      });
-      console.log("Registred user:", data);
-        setName("");
-        setEmail("");
-        setPassword("");
-    } catch (err) {
-      setEmail("");
+      await registerUser({ name, email, password });
+  
+      const loginResponse = await handleLogin({ email, password });
+  
       setName("");
+      setEmail("");
       setPassword("");
-
+      window.location.href = "/";
+    } catch (err) {
       console.error("Could not register user", err);
-      throw new err();
     }
   };
+  
 
   return (
     <section className="flex flex-col">

@@ -6,22 +6,13 @@ import Image from "next/image";
 import { Edit, Trash2 } from "lucide-react";
 import { deleteButton, editButton, saveButton } from "../../ui/ui";
 
-type Property = {
-  id: string;
-  name: string;
-  image_url?: string;
-  description: string;
-  location: string;
-  price_per_night: number;
-  availability: boolean;
-};
 
 export default function OwnerPage() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  useEffect(() => {
+ useEffect(() => {
     getMyProperties()
       .then(setProperties)
       .catch((err) => console.error(err));
@@ -29,7 +20,7 @@ export default function OwnerPage() {
   const [formData, setFormData] = useState<Property>({
     id: "",
     name: "",
-    image_url: "",
+    image_url: "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/29/3200x1600/landscape-1500478111-bed-and-breakfast-lead-index.jpg?resize=1800:*",
     description: "",
     location: "",
     price_per_night: 0,
@@ -83,7 +74,7 @@ export default function OwnerPage() {
             className="border rounded-lg p-4 mb-4 shadow-sm bg-white"
           >
             {property.image_url && (
-              <Image
+              <img
                 src={property.image_url}
                 alt={property.name}
                 width={400}

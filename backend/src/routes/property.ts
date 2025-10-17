@@ -29,21 +29,35 @@ propertyApp.get("/", propertyQueryValidator, async (c) => {
     ...response,
   });
 });
+
 propertyApp.get("/mine", requireAuth, async (c) => {
   const sb = c.get("supabase");
   const localUser = await getLocalUser(c, sb);
-
+  
   const { data: properties, error: propertyError } = await sb
-    .from("properties")
-    .select("*")
-    .eq("owner_id", localUser.id);
-
+  .from("properties")
+  .select("*")
+  .eq("owner_id", localUser.id);
+  
   if (propertyError) {
     throw new HTTPException(500, { message: "Failed to fetch properties" });
   }
-
+  
   return c.json(properties, 200);
 });
+
+propertyApp.get("/:id", async (c) => {
+  const id = c.req.param("id");
+  const sb = c.get("supabase");
+
+  const property = await db.getPropertyById(sb, id);
+
+  if (!property) {
+    throw new HTTPException(404, { message: "Property not found" });
+  }
+
+  return c.json(property, 200);
+})
 
 propertyApp.post("/", requireAuth, async (c) => {
   const sb = c.get("supabase");

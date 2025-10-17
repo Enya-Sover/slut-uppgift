@@ -3,15 +3,7 @@
 import { useState } from "react";
 import { createProperty } from "../../lib/api";
 
-type PropertyData = {
-  name: string;
-  image_url?: string;
-  description: string;
-  location: string;
-  price_per_night: number;
-  availability: boolean;
-  owner_id?: string;
-};
+
 
 export default function CreatePropertyForm() {
   const [formData, setFormData] = useState<PropertyData>({

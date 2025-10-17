@@ -1,4 +1,3 @@
-
 const baseUrl = "http://localhost:3000";
 export async function getProperties() {
   const res = await fetch(`${baseUrl}/property`, {
@@ -31,34 +30,23 @@ export async function registerUser(userData: {
 
   return res.json();
 }
-
-export async function handleLogin(userdata: {
-  email: string;
-  password: string;
-}) {
+export async function handleLogin({ email, password }: { email: string; password: string }) {
   const res = await fetch(`${baseUrl}/auth/login`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(userdata),
-    credentials: "include"
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email, password }),
   });
 
   if (!res.ok) {
-    let message = "Could not login user";
-    try {
-      const errorData = await res.json();
-      message = errorData.message || message;
-    } catch (e) {
-    }
-    throw new Error(message);
+    throw new Error("Failed to login");
   }
 
   return res.json();
 }
 
-export async function createProperty (propertyData: {
+
+export async function createProperty(propertyData: {
   name: string;
   image_url?: string;
   description: string;
@@ -77,7 +65,7 @@ export async function createProperty (propertyData: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(propertyData),
-    credentials: "include"
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -85,8 +73,7 @@ export async function createProperty (propertyData: {
     try {
       const errorData = await res.json();
       message = errorData.message || message;
-    } catch (e) {
-    }
+    } catch (e) {}
     throw new Error(message);
   }
 
@@ -106,10 +93,10 @@ export async function getMyProperties() {
   return res.json();
 }
 
-export async function deleteProperty (id: string) {
+export async function deleteProperty(id: string) {
   const res = await fetch(`${baseUrl}/property/${id}`, {
     method: "DELETE",
-    credentials: "include"
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -117,8 +104,7 @@ export async function deleteProperty (id: string) {
     try {
       const errorData = await res.json();
       message = errorData.message || message;
-    } catch (e) {
-    }
+    } catch (e) {}
     throw new Error(message);
   }
 
@@ -132,9 +118,9 @@ export async function editProperty(id: string, updatedData: Partial<Property>) {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify(updatedData)
+    body: JSON.stringify(updatedData),
   });
-  console.log(res)
+  console.log(res);
 
   if (!res.ok) {
     let message = "Could not edit property";
@@ -153,8 +139,59 @@ export async function getCurrentUser() {
     credentials: "include",
   });
 
-  if (res.status === 401) return null; 
+  if (res.status === 401) return null;
   if (!res.ok) throw new Error("Failed to fetch user");
 
-  return res.json(); 
+  return res.json();
+}
+
+export async function getPropertyById(id: string) {
+  const res = await fetch(`${baseUrl}/property/${id}`, {
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    let message = "Could not fetch property";
+    try {
+      const errorData = await res.json();
+      message = errorData.message || message;
+    } catch (e) {
+      console.error(e);
+    }
+    throw new Error(message);
+  }
+
+  return res.json();
+}
+
+export async function handleBooking(
+  property_id: string,
+  check_in_date: string,
+  check_out_date: string
+) {
+  const res = await fetch(`${baseUrl}/bookings`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    body: JSON.stringify({
+      property_id,
+      check_in_date,
+      check_out_date,
+    }),
+  });
+  console.log(res)
+  if (!res.ok) {
+    let message = "Could not create booking";
+    try {
+      const errorData = await res.json();
+      message = errorData.message || message;
+    } catch (e) {
+      console.error(e);
+    }
+    throw new Error(message);
+  }
+
+  return res.json();
 }

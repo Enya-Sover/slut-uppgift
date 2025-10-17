@@ -4,8 +4,8 @@
 interface NewBooking {
     check_in_date: string;   
     check_out_date: string;  
-    total_price: number;
-    user_id: string;
+    total_price?: number;
+    user_id?: string;
     property_id: string;
     owner_id?: string;
   }

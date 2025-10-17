@@ -5,8 +5,8 @@ import { zValidator } from "@hono/zod-validator";
 const schema: z.ZodType<NewBooking> = z.object({
 check_in_date: z.string("Check-in date is required"),
 check_out_date: z.string("Check-out date is required"),
-total_price: z.number().min(0, "Total price cannot be negative"),
-user_id: z.string("User ID is required"),
+total_price: z.number().min(0, "Total price cannot be negative").optional(),
+user_id: z.string("User ID is required").optional(),
 property_id: z.string("Property ID is required"),
 owner_id: z.string("Owner ID is required").optional()
 }) 
@@ -18,7 +18,7 @@ const bookingSchema: z.ZodType<Booking> = z.object({
     created_at: z.string("Creation date is required"),
     check_in_date: z.string("Check-in date is required"),
     check_out_date: z.string("Check-out date is required"),
-    total_price: z.number().min(0, "Total price cannot be negative"),
+    total_price: z.number().min(0, "Total price cannot be negative").optional(),
     user_id: z.string("User ID is required"),
     property_id: z.string("Property ID is required"),
     owner_id: z.string("Owner ID is required").optional()

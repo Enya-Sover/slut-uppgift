@@ -39,7 +39,7 @@ export async function getProperties(
   
   export async function createProperty(
     sb: SupabaseClient,
-    property: Property
+    property: NewProperty
   ): Promise<Property> {
     const { data, error } = await sb.from("properties").insert(property).select().single();
   
@@ -107,7 +107,26 @@ export async function getProperties(
     }
     return data;
   }
+  export async function getPropertyById(
+    sb: SupabaseClient,
+    id: string
+  ): Promise<Property | null> {
+    const { data, error } = await sb
+      .from("properties")
+      .select("*")
+      .eq("id", id)
+      .single();
   
+    if (error) {
+      if (error.code === "PGRST116") {
+        console.error("Property not found:", error);
+        return null;
+      }
+      console.error("Supabase fetch error:", error);
+      throw new HTTPException(500, { message: "Failed to fetch property" });
+    }
+    return data || null;
+  }
   
   export async function deleteProperty(sb: SupabaseClient, id: string): Promise<Property | null> {
     const query = sb

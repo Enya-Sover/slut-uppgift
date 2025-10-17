@@ -3,19 +3,12 @@
 import { useEffect, useState } from "react";
 import { getProperties } from "../lib/api";
 import { mainContainer, mainTitle, standardDescription } from "../ui/ui";
+import Link from "next/link";
 import Image from "next/image";
-import { Link } from "react-router-dom";
+import { standardImageSize } from "../ui/ui";
+import { Images } from "lucide-react";
 
-type Property = {
-  id: string;
-  image_url: string;
-  name: string;
-  description: string;
-  location: string;
-  price_per_night: number;
-  availability: boolean;
-  owner_id?: string;
-};
+
 export default function HomePage() {
   const [properties, setProperties] = useState([]);
 
@@ -30,15 +23,16 @@ export default function HomePage() {
         {properties && properties.length > 0 ? (
           properties.map((property: Property) => (
             <div key={property.id} className="flex flex-col">
-              {/* <Link to={`/booking/${property.id}`}> implementeras senare*/}
-                <Image
+
+              <Link href={`/booking/${property.id}`}>
+                <img
                   src={`${property.image_url}`}
                   alt={property.name || "Fastighetsbild"}
                   width={400}
                   height={300}
-                  className="rounded-lg object-cover"
-                />{" "}
-              {/* </Link> */}
+                  className={standardImageSize}
+                  />{" "}
+                  </Link>
               <span>{property.name}</span>
               <span>{property.location}</span>
               <span> Price: {property.price_per_night} SEK</span>
