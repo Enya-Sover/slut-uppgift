@@ -39,7 +39,7 @@ export default function CreatePropertyForm() {
 
     try {
       await createProperty(formData);
-      setSuccess("Property skapad!");
+      setSuccess("Property created!");
 
       setFormData({
         name: "",

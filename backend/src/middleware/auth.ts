@@ -74,10 +74,11 @@ function createSupabaseForRequest(c: Context) {
   
     const { data: user, error } = await supabase
       .from("users")
-      .select("is_admin")
+      .select("*")
       .eq("email", authUser.email)
       .single()
-  
+    console.log("user", user, typeof user?.is_admin)
+
     if (error || !user) {
       console.error(error)
       throw new HTTPException(404, { message: "User not found in local table" })

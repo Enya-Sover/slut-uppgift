@@ -30,6 +30,14 @@ bookingApp.get("/", requireAuth, adminAuth, bookingQueryValidator, async (c) => 
   });
 });
 
+bookingApp.get("/mine", requireAuth, async (c) => {
+  const sb = c.get("supabase");
+
+  const localUser = await getLocalUser(c, sb);
+  const bookings = await db.getMyBookings(sb, localUser.id, {});
+  return c.json(bookings);
+})
+
 bookingApp.post("/", requireAuth, newBookingValidator, async (c) => {
   const sb = c.get("supabase");
   const localUser = await getLocalUser(c, sb);

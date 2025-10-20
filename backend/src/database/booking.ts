@@ -29,6 +29,7 @@ export async function getBookings(
 }
 export async function getMyBookings(
   sb: SupabaseClient,
+  id: string,
   query: BookingListQuery
 ): Promise<PaginatedListResponse<Booking>> {
   const startIndex = query.offset || 0;
@@ -38,7 +39,7 @@ export async function getMyBookings(
   let dbQuery = sb
   .from("bookings")
   .select("*", { count: "exact" })
-  .eq("user_id", authData.user)
+  .eq("user_id", id || authData.user?.id)
   .range(startIndex, endIndex);
 
   if (query.property_id) dbQuery = dbQuery.eq("property_id", query.property_id);

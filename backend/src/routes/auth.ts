@@ -27,6 +27,7 @@ authApp.post("/register", newUserValidator, async (c) => {
 });
 
 
+
 authApp.post("/login", async (c) => {
   const { email, password } = await c.req.json();
   const supabase = c.get("supabase");
