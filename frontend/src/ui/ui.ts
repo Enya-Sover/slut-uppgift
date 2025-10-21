@@ -9,3 +9,7 @@ export const editButton = "flex items-center gap-2 bg-green-500 text-white px-4 
 export const deleteButton = "flex items-center gap-2 px-4 py-2 rounded-lg text-white transition "
 export const saveButton= "bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition"
 export const standardImageSize= "rounded mb-3 object-cover w-[400px] h-[250px]"
+export const capitalizeFirstLetter = (str: string) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+  export const homeButton = "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"

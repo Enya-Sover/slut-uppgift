@@ -208,3 +208,15 @@ export async function getBookings() {
 
   return res.json();
 }
+export async function deleteBooking(id: string) {
+  const res = await fetch(`${baseUrl}/bookings/:id`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (!res.ok) {
+    throw new Error("Could not delete booking");
+  }
+
+  return res.json();
+}

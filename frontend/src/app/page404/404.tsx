@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import * as ui from "../../ui/ui";
 
 export default function Page404() {
   return (
@@ -16,7 +17,7 @@ export default function Page404() {
 
       <Link
         href="/"
-        className="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition"
+        className={ui.homeButton}
       >
         Go to Homepage
       </Link>

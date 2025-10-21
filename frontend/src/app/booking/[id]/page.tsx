@@ -47,6 +47,12 @@ console.log("property id:", property.id)
       setTotalPrice(nights * property.price_per_night);
     }
   }, [bookingData, property]);
+  const clickBook = async () => {
+    const ok = await handleBooking(property?.id, bookingData.check_in_date, bookingData.check_out_date);
+    if (ok){
+      window.location.href = "/confirmationpage";
+    }
+  }
 
   return (
     <section>
@@ -66,7 +72,7 @@ console.log("property id:", property.id)
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleBooking(property?.id, bookingData.check_in_date, bookingData.check_out_date);
+              clickBook();
             }}
           >
             <input
