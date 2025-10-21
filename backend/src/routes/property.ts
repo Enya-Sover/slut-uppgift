@@ -37,7 +37,7 @@ propertyApp.get("/mine", requireAuth, async (c) => {
   const { data: properties, error: propertyError } = await sb
     .from("properties")
     .select("*")
-    .eq("owner_id", localUser.id);
+    .eq("owner_id", localUser.id) as { data: Property[]; error: any; };
 
   if (propertyError) {
     throw new HTTPException(500, { message: "Failed to fetch properties" });
@@ -58,9 +58,9 @@ propertyApp.get("/:id", async (c) => {
   return c.json(property, 200);
 });
 
-propertyApp.post("/", requireAuth, async (c) => {
+propertyApp.post("/", newPropertyValidator, requireAuth, async (c) => {
   const sb = c.get("supabase");
-  const body: Property = await c.req.json();
+  const body: NewProperty = await c.req.json();
   if (body.image_url === "" || !body.image_url) {
     body.image_url =
       "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/29/3200x1600/landscape-1500478111-bed-and-breakfast-lead-index.jpg?resize=1800:*";
@@ -75,15 +75,11 @@ propertyApp.post("/", requireAuth, async (c) => {
   return c.json(property, 201);
 });
 
-propertyApp.put(
-  "/:id",
-  requireAuth,
-  newPropertyValidator,
-  verifyOwnershipOrAdmin,
+propertyApp.put("/:id", requireAuth, newPropertyValidator, verifyOwnershipOrAdmin,
   async (c) => {
     const sb = c.get("supabase");
     const id = c.req.param("id");
-    const body: NewProperty = await c.req.json();
+    const body: Partial<NewProperty> = await c.req.json();
     const updatedProperty = await db.updateProperty(sb, id, body);
     return c.json(updatedProperty, 200);
   }

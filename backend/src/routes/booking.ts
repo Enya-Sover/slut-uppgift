@@ -33,7 +33,7 @@ bookingApp.get("/", requireAuth, bookingQueryValidator, async (c) => {
 
 bookingApp.post("/", requireAuth, newBookingValidator, async (c) => {
   const sb = c.get("supabase");
-  const localUser = await getLocalUser(c, sb);
+  const localUser: LocalUser = await getLocalUser(c, sb);
 
   const body = await c.req.json<Omit<NewBooking, "total_price" | "user_id">>();
 
@@ -76,6 +76,7 @@ bookingApp.get("/:id", requireAuth, async (c) => {
 
   return c.json(booking);
 });
+
 bookingApp.put("/:id", requireAuth, newBookingValidator, async (c) => {
   const id = c.req.param("id");
   const sb = c.get("supabase");
