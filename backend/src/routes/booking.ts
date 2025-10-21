@@ -12,10 +12,11 @@ import { getLocalUser } from "../utils/getLocalUser.js";
 
 const bookingApp = new Hono();
 
-bookingApp.get("/", requireAuth, adminAuth, bookingQueryValidator, async (c) => {
+bookingApp.get("/", requireAuth, bookingQueryValidator, async (c) => {
   const query = c.req.valid("query");
   const sb = c.get("supabase");
 
+  
   const defaultResponse: PaginatedListResponse<Booking> = {
     data: [],
     count: 0,
@@ -29,14 +30,6 @@ bookingApp.get("/", requireAuth, adminAuth, bookingQueryValidator, async (c) => 
     ...response,
   });
 });
-
-bookingApp.get("/mine", requireAuth, async (c) => {
-  const sb = c.get("supabase");
-
-  const localUser = await getLocalUser(c, sb);
-  const bookings = await db.getMyBookings(sb, localUser.id, {});
-  return c.json(bookings);
-})
 
 bookingApp.post("/", requireAuth, newBookingValidator, async (c) => {
   const sb = c.get("supabase");
@@ -60,6 +53,7 @@ bookingApp.post("/", requireAuth, newBookingValidator, async (c) => {
     ...body,
     total_price: totalPrice,
     user_id: localUser.id,
+    owner_id: propertyData.owner_id,
   };
 
   const booking = await db.createBooking(sb, bookingData);

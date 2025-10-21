@@ -12,7 +12,7 @@ export async function getLocalUser(c: any, sb: any): Promise<LocalUser> {
   const { data: localUser, error } = await sb
     .from("users")
     .select("id, name, email, is_admin")
-    .eq("email", authUser.email)
+    .eq("id", authUser.id)
     .single();
 
   if (error || !localUser) {

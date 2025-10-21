@@ -196,8 +196,8 @@ export async function handleBooking(
   return res.json();
 }
 
-export async function getMyBookings() {
-  const res = await fetch(`${baseUrl}/bookings/mine`, {
+export async function getBookings() {
+  const res = await fetch(`${baseUrl}/bookings`, {
     credentials: "include",
     cache: "no-store",
   });

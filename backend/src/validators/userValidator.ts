@@ -2,7 +2,6 @@ import * as z from "zod";
 import { zValidator } from "@hono/zod-validator";
 
 const schema: z.ZodType<NewUser> = z.object({
-  id: z.coerce.string(),
   name: z.string(),
   email: z.string()
 });
@@ -11,6 +10,7 @@ const userSchema: z.ZodType<User> = z.object({
   id: z.coerce.string(),
   name: z.string(),
   email: z.string(),
+  password: z.string(),
   is_admin: z.boolean(),
   created_at: z.coerce.string()
 });

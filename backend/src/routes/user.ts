@@ -3,11 +3,12 @@ import { userQueryValidator, newUserValidator, userValidator, updateUserValidato
 import { requireAuth, adminAuth } from "../middleware/auth.js";
 import * as db from "../database/user.js";
 import { HTTPException } from "hono/http-exception";
+import { getLocalUser } from "../utils/getLocalUser.js";
 
 const userApp = new Hono();
 
 
-userApp.get("/", userQueryValidator, async (c) => {
+userApp.get("/", requireAuth, adminAuth, userQueryValidator, async (c) => {
     const query = c.req.valid("query");
     const sb = c.get("supabase");
   
@@ -28,22 +29,30 @@ userApp.get("/", userQueryValidator, async (c) => {
   userApp.post("/", async (c)=> {
     //Logik är flyttad till auth.ts för att hantera både auth och usertabell creation samtidigt
   })
+
+  userApp.get("/:email", requireAuth, async (c) => {
+    const { email } = c.req.param();
+    const sb = c.get("supabase");
+    const user = (await db.getUser(sb, email)) as User | null;
+    const localUser = await getLocalUser(c, sb);
   
-  userApp.get("/:email", requireAuth, adminAuth, async (c) => {
-    const { email } = c.req.param()
-    const sb = c.get("supabase")
-    const user = await db.getUser(sb, email)
-    if(!user){
-      throw new HTTPException(404, {message: "User not found"})
+    if (!user) {
+      throw new HTTPException(404, { message: "User not found" });
     }
-    return c.json(user)
   
-  })
+    if (localUser.is_admin === false) {
+      const { id, is_admin, ...safeUser } = user!;
+      return c.json(safeUser, 200);
+    }
   
-  userApp.put("/:id", requireAuth, adminAuth, newUserValidator, async (c) => {
+    return c.json(user, 200);
+  });
+  
+  
+  userApp.put("/:id", requireAuth, newUserValidator, async (c) => {
     const id = c.req.param("id");
     const sb = c.get("supabase");
-    const body = await c.req.json();
+    const body: Partial<User> = await c.req.json();
   
     const user = await db.updateUser(sb, id, body);
   
@@ -58,7 +67,7 @@ userApp.get("/", userQueryValidator, async (c) => {
   userApp.patch("/:id", requireAuth, updateUserValidator, async (c) => {
     const id = c.req.param("id");
     const sb = c.get("supabase");
-    const body = await c.req.json();
+    const body: Partial<User> = await c.req.json();
   
     const { is_admin, created_at, ...updateData }: Partial<User> = body;
   
@@ -88,9 +97,14 @@ userApp.get("/", userQueryValidator, async (c) => {
   
   
   
-  userApp.delete("/:id", requireAuth, adminAuth, async (c) => {
+  userApp.delete("/:id", requireAuth, async (c) => {
     const id = c.req.param("id");
     const sb = c.get("supabase")
+    const localUser = await getLocalUser(c, sb);
+
+    if (localUser.id !== id && !localUser.is_admin) {
+      throw new HTTPException(403, { message: "Forbidden" });
+    }
     const deleted = await db.deleteUser(sb, id);
   
     if (!deleted) {

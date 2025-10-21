@@ -81,8 +81,8 @@ export async function getProperties(
   export async function updateProperty(
     sb: SupabaseClient,
     id: string,
-    property: NewProperty
-  ): Promise<Property | null> {
+    property: Partial<NewProperty>
+  ): Promise<Partial<NewProperty> | null> {
     const { ...updateBody}  = property;
     const { data, error } = await sb
       .from("properties")

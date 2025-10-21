@@ -28,10 +28,12 @@ export default function LoginPage() {
   const loginFunction = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await handleLogin(formData);
-     setFormData({ email: "", password: "" });
-      setError(null);
-      window.location.href = "/";
+      const approved = await handleLogin(formData);
+    
+      if (approved) {
+        setFormData({ email: "", password: "" });
+        window.location.href = "/";
+      }
     } catch (error) {
       console.error("Could not login user", error);
       setError("Wrong email or password");

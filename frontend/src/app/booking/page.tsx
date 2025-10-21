@@ -10,7 +10,7 @@ export default function BookingPage() {
 
   useEffect(() => {
     api
-      .getMyBookings()
+      .getBookings()
       .then((data) => {
         setBookings(data);
       })
