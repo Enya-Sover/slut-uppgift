@@ -35,7 +35,7 @@ export default function Header() {
           {user && (
             <span><Link href="/ownerpage">Owners page</Link></span>
           )}
-          {user && (<span><Link href="/mybookings"> {user.is_admin === true ? "Upcomming bookings" : "My bookings"}</Link></span>)}
+          {user && (<span><Link href="/mybookings"> {user.is_admin ? "Upcomming bookings" : "My bookings"}</Link></span>)}
           {user && (<span><Link href="/property">Create new property</Link></span>)}</div>
         <div className="flex gap-6 items-center">
           {!user && (<span><Link href="/register">Register</Link></span>)}

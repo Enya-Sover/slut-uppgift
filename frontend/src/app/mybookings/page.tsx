@@ -3,13 +3,18 @@
 import { useEffect, useState } from "react";
 import { getBookings, getPropertyById, deleteBooking } from "../../lib/api";
 import * as ui from "../../ui/ui";
-
+import { getCurrentUser } from "../../lib/api";
 
 export default function MyBookingsPage() {
   const [bookings, setBookings] = useState<BookingWithProperty[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [user, setUser] = useState<LocalUser | null>(null);
+  
+  useEffect(() => {
+    getCurrentUser().then(setUser).catch(console.error);
+  }, []);
+  
   useEffect(() => {
     async function fetchBookingsWithProperties() {
       try {
@@ -54,7 +59,7 @@ export default function MyBookingsPage() {
 
   return (
     <main className="max-w-3xl mx-auto p-6">
-      <h1 className={ui.mainTitle}>My Bookings</h1>
+      { user?.is_admin ? <h1 className={ui.mainTitle}>Upcomming bookings</h1> : <h1 className={ui.mainTitle}>My upcomming Bookings</h1>}
 
       {loading && <p>Loading your bookings...</p>}
       {error && <p className="text-red-500">{error}</p>}
