@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getPropertyById, handleBooking } from "../../../lib/api";
-import { saveButton } from "../../../ui/ui";
+import * as ui from "../../../ui/ui";
 
 export default function BookingPage() {
   const { id } = useParams<{ id: string }>();
@@ -73,7 +73,7 @@ export default function BookingPage() {
               alt={property.name}
               width={400}
               height={250}
-              className="rounded mb-3 object-cover"
+              className={ui.standardImageSize}
               onClick={() =>
                 setSelectedImage(
                   property.main_image_url ||
@@ -90,7 +90,7 @@ export default function BookingPage() {
                     src={url}
                     key={index}
                     alt={`${property.name}-${index}`}
-                    className="rounded object-cover w-full h-24 cursor-pointer hover:opacity-80 transition"
+                    className= {ui.smallImageSize}
                     onClick={() => setSelectedImage(url)}
                   />
                 ))}
@@ -158,7 +158,7 @@ export default function BookingPage() {
               />
             </label>
 
-            <button type="submit" className={saveButton}>
+            <button type="submit" className={ui.saveButton}>
               Confirm booking
             </button>
           </form>

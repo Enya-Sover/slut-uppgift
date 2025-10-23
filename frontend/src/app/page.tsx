@@ -33,9 +33,9 @@ export default function HomePage() {
                   className={standardImageSize}
                   />{" "}
                   </Link>
-              <span>{property.name}</span>
+              <span className="font-extrabold">{property.name}</span>
               <span>{property.location}</span>
-              <span> Price: {property.price_per_night} SEK</span>
+              <span className="font-bold"> Price: {property.price_per_night} SEK</span>
             </div>
           ))
         ) : (
