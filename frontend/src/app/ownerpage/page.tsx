@@ -20,7 +20,8 @@ export default function OwnerPage() {
   const [formData, setFormData] = useState<Property>({
     id: "",
     name: "",
-    image_url: "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/29/3200x1600/landscape-1500478111-bed-and-breakfast-lead-index.jpg?resize=1800:*",
+    main_image_url: "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/29/3200x1600/landscape-1500478111-bed-and-breakfast-lead-index.jpg?resize=1800:*",
+    image_urls: [],
     description: "",
     location: "",
     price_per_night: 0,
@@ -73,9 +74,9 @@ export default function OwnerPage() {
             key={property.id}
             className="border rounded-lg p-4 mb-4 shadow-sm bg-white"
           >
-            {property.image_url && (
+            {property.main_image_url && (
               <img
-                src={property.image_url}
+                src={property.main_image_url}
                 alt={property.name}
                 width={400}
                 height={250}

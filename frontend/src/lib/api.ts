@@ -48,7 +48,7 @@ export async function handleLogin({ email, password }: { email: string; password
 
 export async function createProperty(propertyData: {
   name: string;
-  image_url?: string;
+  main_image_url?: string;
   description: string;
   location: string;
   price_per_night: number;
@@ -56,8 +56,8 @@ export async function createProperty(propertyData: {
 }) {
   const cleanData = { ...propertyData };
 
-  if (cleanData.image_url === "") {
-    delete cleanData.image_url;
+  if (cleanData.main_image_url === "") {
+    delete cleanData.main_image_url;
   }
   const res = await fetch(`${baseUrl}/property`, {
     method: "POST",

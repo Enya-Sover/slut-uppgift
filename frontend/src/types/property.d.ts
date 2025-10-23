@@ -2,7 +2,8 @@
 type NewProperty = {
     id: string;
     name: string;
-    image_url?: string;
+    main_image_url?: string;
+    image_urls?: string[];
     description: string;
     location: string;
     price_per_night: number;
@@ -11,7 +12,8 @@ type NewProperty = {
 type Property = {
     id: string;
     name: string;
-    image_url: string;
+    main_image_url: string;
+    image_urls: string[];
     description: string;
     location: string;
     price_per_night: number;
@@ -20,7 +22,8 @@ type Property = {
 
 type PropertyData = {
     name: string;
-    image_url?: string;
+    main_image_url?: string;
+    image_urls?: string[];
     description: string;
     location: string;
     price_per_night: number;

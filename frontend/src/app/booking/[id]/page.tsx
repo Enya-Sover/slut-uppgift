@@ -12,7 +12,8 @@ export default function BookingPage() {
   const [property, setProperty] = useState<Property >({
     id: "",
     name: "",
-    image_url: "",
+    main_image_url: "",
+    image_urls: [],
     description: "",
     location: "",
     price_per_night: 0,
@@ -57,7 +58,7 @@ export default function BookingPage() {
       {property ? (
         <div>
           <img
-            src={property.image_url || "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/29/3200x1600/landscape-1500478111-bed-and-breakfast-lead-index.jpg?resize=1800:*"}
+            src={property.main_image_url || "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/29/3200x1600/landscape-1500478111-bed-and-breakfast-lead-index.jpg?resize=1800:*"}
             alt={property.name}
             width={400}
             height={250}

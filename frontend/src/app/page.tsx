@@ -26,7 +26,7 @@ export default function HomePage() {
 
               <Link href={`/booking/${property.id}`}>
                 <img
-                  src={`${property.image_url}`}
+                  src={`${property.main_image_url}`}
                   alt={property.name || "Fastighetsbild"}
                   width={400}
                   height={300}

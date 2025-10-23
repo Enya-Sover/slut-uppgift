@@ -61,8 +61,8 @@ propertyApp.get("/:id", async (c) => {
 propertyApp.post("/", newPropertyValidator, requireAuth, async (c) => {
   const sb = c.get("supabase");
   const body: NewProperty = await c.req.json();
-  if (body.image_url === "" || !body.image_url) {
-    body.image_url =
+  if (body.main_image_url === "" || !body.main_image_url) {
+    body.main_image_url =
       "https://hips.hearstapps.com/clv.h-cdn.co/assets/17/29/3200x1600/landscape-1500478111-bed-and-breakfast-lead-index.jpg?resize=1800:*";
   }
 
