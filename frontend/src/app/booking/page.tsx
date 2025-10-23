@@ -18,7 +18,6 @@ export default function BookingPage() {
         console.error("Error fetching bookings:", error);
       });
   }, []);
-  console.log("bookings", bookings);
 
   return (
     <>

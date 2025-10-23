@@ -33,8 +33,6 @@ export default function BookingPage() {
       getPropertyById(id).then(setProperty).catch(console.error);
     }
   }, [id]);
-console.log("bookingData:", bookingData)
-console.log("property id:", property.id)
   useEffect(() => {
     if (property) {
       const checkIn = new Date(bookingData.check_in_date);

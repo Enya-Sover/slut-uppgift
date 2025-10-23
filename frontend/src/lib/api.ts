@@ -120,7 +120,6 @@ export async function editProperty(id: string, updatedData: Partial<Property>) {
     credentials: "include",
     body: JSON.stringify(updatedData),
   });
-  console.log(res);
 
   if (!res.ok) {
     let message = "Could not edit property";
@@ -181,7 +180,6 @@ export async function handleBooking(
       check_out_date,
     }),
   });
-  console.log(res)
   if (!res.ok) {
     let message = "Could not create booking";
     try {

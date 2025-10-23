@@ -69,13 +69,13 @@ bookingApp.get("/:id", requireAuth, async (c) => {
   const { id } = c.req.param();
   const sb = c.get("supabase");
   const booking: Booking | null = await db.getBooking(sb, id);
-
   if (!booking) {
     throw new HTTPException(404, { message: "Booking not found" });
   }
 
   return c.json(booking);
 });
+
 
 bookingApp.put("/:id", requireAuth, newBookingValidator, async (c) => {
   const id = c.req.param("id");

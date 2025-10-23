@@ -77,7 +77,6 @@ function createSupabaseForRequest(c: Context) {
       .select("*")
       .eq("email", authUser.email)
       .single()
-    console.log("user", user, typeof user?.is_admin)
 
     if (error || !user) {
       console.error(error)

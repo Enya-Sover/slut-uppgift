@@ -10,7 +10,7 @@ export default function MyBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [user, setUser] = useState<LocalUser | null>(null);
-  
+
   useEffect(() => {
     getCurrentUser().then(setUser).catch(console.error);
   }, []);
