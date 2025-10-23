@@ -49,6 +49,7 @@ export async function handleLogin({ email, password }: { email: string; password
 export async function createProperty(propertyData: {
   name: string;
   main_image_url?: string;
+  image_urls?: string[];
   description: string;
   location: string;
   price_per_night: number;

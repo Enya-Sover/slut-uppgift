@@ -3,7 +3,8 @@ import { zValidator } from "@hono/zod-validator";
 
 const schema: z.ZodType<NewUser> = z.object({
   name: z.string(),
-  email: z.string()
+  email: z.string(),
+  password: z.string().min(6, "Password must be at least 6 characters long").optional()
 });
 
 const userSchema: z.ZodType<User> = z.object({

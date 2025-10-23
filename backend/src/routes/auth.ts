@@ -17,9 +17,8 @@ authApp.post("/register", newUserValidator, async (c) => {
   }
 
   const newUser: NewUser = {
-    id: data.user!.id, 
     name,
-    email
+    email,
   };
 
   const user = await db.createUser(supabase, newUser);
