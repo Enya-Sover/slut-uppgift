@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import * as ui from "../../ui/ui";
+import * as ui from "../ui/ui"
+
 
 export default function Page404() {
   return (
@@ -11,7 +12,7 @@ export default function Page404() {
         Oops! Page not found 🕵️‍♂️ 
       </h2> 
       <p className="text-gray-600 mt-2 mb-6 max-w-md">
-        The page you’re looking for doesn’t exist or may have been moved.  
+        The page you`re looking for doesn`t exist or may have been moved.  
         Double-check the URL or go back to the homepage.
       </p>
 
