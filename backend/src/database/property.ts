@@ -70,7 +70,6 @@ export async function getProperties(
   
     if (error) {
       if (error.code === "PGRST116") {
-        // No rows found
         return null;
       }
       console.error("Supabase fetch error:", error);
