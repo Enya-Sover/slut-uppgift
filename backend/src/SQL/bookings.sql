@@ -1,6 +1,9 @@
-CREATE TABLE public.bookings (
+
+
+
+CREATE TABLE bookings (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    property_id uuid NOT NULL REFERENCES public.properties (id) ON DELETE CASCADE,
+    property_id uuid NOT NULL REFERENCES properties (id) ON DELETE CASCADE,
     user_id uuid NOT NULL REFERENCES auth.users (id) ON DELETE CASCADE,
     check_in_date date NOT NULL,
     check_out_date date NOT NULL,
@@ -10,7 +13,7 @@ CREATE TABLE public.bookings (
 ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
 
 
--- Endast inloggade kan skapa bokningar
+-- Endast inloggade användare kan skapa bokningar
 CREATE POLICY "Users can insert their bookings"
 ON bookings
 FOR INSERT

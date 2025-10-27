@@ -1,3 +1,6 @@
+
+
+
 CREATE TABLE users (
     id uuid PRIMARY KEY SET DEFAULT auth.uid();
     email text UNIQUE NOT NULL,
