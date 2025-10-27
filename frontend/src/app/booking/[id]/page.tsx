@@ -97,7 +97,6 @@ export default function BookingPage() {
             </div>
           </div>
 
-          {/* 🔍 Modal */}
           {selectedImage && (
             <div
               className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50"
@@ -111,7 +110,6 @@ export default function BookingPage() {
             </div>
           )}
 
-          {/* 📅 Bokningsinfo */}
           <h1 className="text-2xl font-bold mb-2">
             Booking for {property.name}
           </h1>
