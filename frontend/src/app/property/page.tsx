@@ -96,7 +96,6 @@ export default function CreatePropertyForm() {
         className="border p-2 rounded"
       />
 
-      {/* 📸 Lägg till bild–URL */}
       <div className="flex gap-2">
         <input
           type="text"
@@ -114,7 +113,6 @@ export default function CreatePropertyForm() {
         </button>
       </div>
 
-      {/* 🖼️ Förhandsvisa URL:er */}
       {formData.image_urls && formData.image_urls.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-2">
           {formData.image_urls.map((url, index) => (

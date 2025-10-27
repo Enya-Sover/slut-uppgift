@@ -24,7 +24,6 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white shadow">
       <nav className="flex items-center justify-between px-6 py-3">
-        {/* Vänster sida */}
         <div className="flex gap-10 items-center">
           {user && (
             <span className="font-bold">
@@ -33,7 +32,7 @@ export default function Header() {
           )}
           <span><Link href="/">Home</Link></span>
           {user && (
-            <span><Link href="/ownerpage">Owners page</Link></span>
+            <span><Link href="/ownerpage">My properties</Link></span>
           )}
           {user && (<span><Link href="/mybookings"> {user.is_admin ? "Upcomming bookings" : "My bookings"}</Link></span>)}
           {user && (<span><Link href="/property">Create new property</Link></span>)}</div>
