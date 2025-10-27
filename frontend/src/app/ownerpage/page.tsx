@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { getMyProperties, deleteProperty, editProperty } from "../../lib/api";
 import Image from "next/image";
 import { Edit, Trash2 } from "lucide-react";
-import { deleteButton, editButton, saveButton } from "../../ui/ui";
+import * as ui from "../../ui/ui";
+import Link from "next/link";
 
 
 export default function OwnerPage() {
@@ -132,7 +133,7 @@ export default function OwnerPage() {
                 </label>
 
                 <div className="flex gap-3 mt-2">
-                  <button type="submit" className={saveButton}>
+                  <button type="submit" className={ui.saveButton}>
                     Save
                   </button>
                   <button
@@ -161,7 +162,7 @@ export default function OwnerPage() {
             <div className="mt-4 flex gap-3">
               <button
                 onClick={() => handleEdit(property)}
-                className={editButton}
+                className={ui.editButton}
               >
                 <Edit size={18} />
                 Edit
@@ -170,7 +171,7 @@ export default function OwnerPage() {
               <button
                 onClick={() => handleDelete(property.id)}
                 disabled={loadingId === property.id}
-                className={`${deleteButton} ${
+                className={`${ui.deleteButton} ${
                   loadingId === property.id
                     ? "bg-gray-400 cursor-not-allowed"
                     : "bg-red-500 hover:bg-red-600"
@@ -183,7 +184,8 @@ export default function OwnerPage() {
           </div>
         ))
       ) : (
-        <p className="text-center text-gray-600">No properties found</p>
+        <p className="text-center text-gray-600">You have no properties listed, go to 
+        <Link href="/property"> <button className={ui.homeButton}> Create new property</button></Link> to create a listing</p>
       )}
     </section>
   );

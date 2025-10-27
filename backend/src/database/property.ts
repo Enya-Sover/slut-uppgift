@@ -22,6 +22,7 @@ export async function getProperties(
       .from("properties")
       .select("*", { count: "exact" })
       .order(order, { ascending: true })
+      .eq("availability", true)
       .range(startIndex, endIndex);
   
     if (error) {
