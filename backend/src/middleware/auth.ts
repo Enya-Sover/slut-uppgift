@@ -63,7 +63,7 @@ function createSupabaseForRequest(c: Context) {
     return next() 
   }
 
-
+  //Här måste man vara admin för att komma åt
   export async function adminAuth(c: Context, next: Next) {
     const supabase = c.get("supabase")
     const authUser = c.get("user")

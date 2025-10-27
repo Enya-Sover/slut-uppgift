@@ -23,13 +23,6 @@ FOR SELECT
 TO anon, authenticated
 USING (true);
 
--- Ägare kan ta bort sina egna properties
-CREATE POLICY "Users can delete their own properties"
-ON properties
-FOR DELETE
-TO authenticated
-USING (auth.uid() = owner_id);
-
 -- Endast ägare/inloggade användare kan skapa properties
 CREATE POLICY "Owners can insert properties"
 ON properties
@@ -41,6 +34,13 @@ WITH CHECK (auth.uid() = owner_id);
 CREATE POLICY "Owners can update properties"
 ON properties
 FOR UPDATE
+TO authenticated
+USING (auth.uid() = owner_id);
+
+-- Ägare kan ta bort sina egna properties
+CREATE POLICY "Users can delete their own properties"
+ON properties
+FOR DELETE
 TO authenticated
 USING (auth.uid() = owner_id);
 
